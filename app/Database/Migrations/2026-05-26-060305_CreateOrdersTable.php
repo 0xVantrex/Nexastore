@@ -8,11 +8,43 @@ class CreateOrdersTable extends Migration
 {
     public function up()
     {
-        //
+        $this->forge->addField([
+            'id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
+                'auto_increment' => true,
+                ],
+            'user_id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
+            ],
+            'total' => [
+                'type' => 'DECIMAL',
+                'constraint' => '10,2',
+            ],
+            'status' => [
+                'type' => 'ENUM',
+                'constraint' => ['pending', 'processing', 'shipped', 'delivered', 'cancelled'], 'default' => 'pending'
+                ],
+            'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            
+        ]);
+        $this->forge->addPrimaryKey('id');
+        $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->createtable('orders');
     }
 
     public function down()
     {
-        //
+        $this->forge->dropTable('orders');
     }
 }
