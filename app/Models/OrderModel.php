@@ -8,39 +8,31 @@ class OrderModel extends Model
 {
     protected $table            = 'orders';
     protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['user_id', 'total', 'status'];
+    protected $useTimestamps = true;
 
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
-
-    protected array $casts = [];
-    protected array $castHandlers = [];
-
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
+    protected $validationRules      = [
+        'user_id' => 'required|integer',
+        'total' => 'required|decimal|greater_than[0]',
+        'status' => 'required|in_list[pending,processing,shipped,delivered,cancelled]',
+    ];
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    public function getOrdersByUser(int $userId)
+    {
+        return $this->where('user_id', $userId)
+                    ->orderBy('created_at', 'DESC')
+                    ->findAll();
+    }
+
+    public function getAllWithUsers()
+    {
+        return $this->db->table('orders o')
+                        ->select('o.*, u.name as user_name, u.email as user_email')
+                        ->join('users u', 'u.id = o.user_id')
+                        ->orderBy('o.created_at', 'DESC')
+                        ->get()
+                        ->getResultArray();
+    }
 }
