@@ -27,7 +27,7 @@ class Dashboard extends BaseController
             $data['my_products'] = $productModel->where('created_by', $userId) ->findAll();
 
         } else {
-            $data['my_orders'] = $orderModel->getOrderByUser($userId);
+            $data['my_orders'] = $orderModel->getOrdersByUser($userId);
         }
 
         return view('dashboard/index', $data);
