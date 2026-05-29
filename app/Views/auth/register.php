@@ -17,6 +17,10 @@
                         <input type="email" name="email" class="form-control btn-rounded-none" required>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label text-uppercase">Phone Number</label>
+                        <input type="text" name="phone" class="form-control btn-rounded-none" placeholder="e.g 0712345678" required>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label text-uppercase">Password</label>
                         <input type="password" name="password" class="form-control btn-rounded-none" required>
                     </div>

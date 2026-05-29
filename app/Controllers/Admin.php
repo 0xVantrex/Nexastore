@@ -55,9 +55,18 @@ class Admin extends BaseController
     public function updateStatus($id)
     {
         $orderModel = new OrderModel();
+        $userModel = new UserModel();
         $status     = $this->request->getPost('status');
 
+        $order = $orderModel->find($id);
+
         if ($orderModel->update($id, ['status' => $status])) {
+            // Send SMS notification to customer
+            $user = $userModel->find($order['user_id']);
+            if ($user && $user['phone']) {
+                $sms = new \App\Libraries\SmsLibrary();
+                $sms ->sendOrderStatusUpdate($user['phone'], $user['name'], $id, $status);
+            }
             return redirect()->to('/admin/orders')->with('success', 'Order status updated!');
         }
 

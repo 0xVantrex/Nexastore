@@ -50,6 +50,7 @@ class Auth extends BaseController
         $data = [
             'name'  =>$this->request->getPost('name'),
             'email' =>$this->request->getPost('email'),
+            'phone' =>$this->request->getPost('phone'),
             'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'role' => 'user',
         ];
